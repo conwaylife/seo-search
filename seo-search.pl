@@ -54,13 +54,12 @@ my $gens_per_quantum = 96;
 my $x_movement_per_quantum = -8;
 my $y_movement_per_quantum = -8;
 
-my $max_quantums = 80;
+my $max_quantums = 100;
 # At two designated quantums, we'll "reset" the pattern by clearing all cells
 # too far from the engine. By doing this, we hope to get rid of the mess
 # created by the initial random cells, leaving only a puffer with predictable
 # behavior.
-my $quantum_for_reset_1 = 16;
-my $quantum_for_reset_2 = 40;
+my @quanta_for_reset = (16, 40, 80);
 
 my $protect_size = 180;
 my $runs_per_update = 1024; # how often to update the status line
@@ -182,7 +181,7 @@ sub obs_do_1_run {
 			if ($pd[$q]== -54 && $pd[$q-1]== 106 && $pd[$q-2]==   6) { $gm_count2++; return; }
 		}
 
-		if ($q==$quantum_for_reset_1 || $q==$quantum_for_reset_2) {
+		if (grep { $q == $_ } @quanta_for_reset) {
 			g_select(-80+$q*$x_movement_per_quantum,-80+$q*$y_movement_per_quantum,
 				$protect_size,$protect_size);
 			#obs_pause();
